@@ -1,2 +1,5 @@
+albumentations
+numpy
+opencv-python
 torch
 torchvision
