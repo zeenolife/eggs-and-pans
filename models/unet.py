@@ -70,6 +70,9 @@ class UNet(nn.Module):
         # Initialize segmentation head
         self.head = nn.Conv2d(self.decoder_channels[-1], classes, kernel_size=3, padding=1)
 
+        # Initialize multi-label softmax
+        self.softmax = nn.Softmax(dim=1)
+
         # Initialize weights
         self._init_weights()
 
@@ -102,6 +105,9 @@ class UNet(nn.Module):
 
         # Forward through segmentation head
         out = self.head(out)
+
+        # Forward through softmax
+        out = self.softmax(out)
 
         return out
 
