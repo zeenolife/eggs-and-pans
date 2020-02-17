@@ -1,11 +1,17 @@
+# Vis
+test_vis/
+
 # Data
 dataset/
 
 # Checkpoints
-checkpoints
+checkpoints/
 
 # Pycharm files
 .idea/
+
+# Mac
+.DS_Store/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
