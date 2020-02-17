@@ -39,7 +39,7 @@ class Upsampler(nn.Module):
 
 class UNet(nn.Module):
 
-    def __init__(self, classes, pretrained_encoder=True):
+    def __init__(self, pretrained_encoder=True):
 
         super().__init__()
 
@@ -68,10 +68,8 @@ class UNet(nn.Module):
             self.upsamplers.append(Upsampler(residual_ch + upsampler_in, upsampler_out))
 
         # Initialize segmentation head
-        self.head = nn.Conv2d(self.decoder_channels[-1], classes, kernel_size=3, padding=1)
-
-        # Initialize multi-label softmax
-        self.softmax = nn.Softmax(dim=1)
+        self.head_egg = nn.Conv2d(self.decoder_channels[-1], 1, kernel_size=3, padding=1)
+        self.head_pan = nn.Conv2d(self.decoder_channels[-1], 1, kernel_size=3, padding=1)
 
         # Initialize weights
         self._init_weights()
@@ -85,7 +83,7 @@ class UNet(nn.Module):
                 continue
             elif isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-            elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+            elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
@@ -104,17 +102,15 @@ class UNet(nn.Module):
             out = upsampler(out, residual)
 
         # Forward through segmentation head
-        out = self.head(out)
+        out_egg = self.head_egg(out)
+        out_pan = self.head_pan(out)
 
-        # Forward through softmax
-        out = self.softmax(out)
-
-        return out
+        return out_egg, out_pan
 
 
 if __name__ == '__main__':
 
-    model = UNet(2)
+    model = UNet()
     img = torch.rand((1, 3, 1024, 1024))
     out = model(img)
     print(out.shape)

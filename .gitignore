@@ -1,6 +1,9 @@
 # Data
 dataset/
 
+# Checkpoints
+checkpoints
+
 # Pycharm files
 .idea/
 

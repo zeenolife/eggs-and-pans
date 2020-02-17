@@ -1,4 +1,5 @@
 from .dataset import EggsPansDataset
-from .losses import get_jaccard_loss_and_iou
+from .losses import EggsPansLoss, get_iou
+from .metrics import EggsPansMetricIoU
 
-__all__ = ['EggsPansDataset', 'get_jaccard_loss_and_iou']
+__all__ = ['EggsPansDataset', 'EggsPansLoss', 'get_iou', 'EggsPansMetricIoU']

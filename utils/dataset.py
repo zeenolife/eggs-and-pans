@@ -69,20 +69,24 @@ class EggsPansDataset(Dataset):
         egg = cv2.resize(egg, (self.image_size, self.image_size), interpolation=cv2.INTER_LINEAR)
         pan = cv2.resize(pan, (self.image_size, self.image_size), interpolation=cv2.INTER_LINEAR)
 
-        # Merge them together
-        mask = np.stack([egg, pan], axis=-1)
+        # Add axis
+        egg = np.expand_dims(egg, axis=-1)
+        pan = np.expand_dims(pan, axis=-1)
 
         # Apply augmentations
         if self.mode == 'train':
-            augmented = self.augs(image=img, mask=mask)
-            img, mask = augmented['image'], augmented['mask']
+            masks = [egg, pan]
+            augmented = self.augs(image=img, masks=masks)
+            img, masks = augmented['image'], augmented['masks']
+            egg, pan = masks
 
         # Convert to RGB, normalize, and change from HWC to CHW
         img = self._normalize_img(img)
         img = img.transpose(2, 0, 1)
-        mask = mask.transpose(2, 0, 1)
+        egg = egg.transpose(2, 0, 1)
+        pan = pan.transpose(2, 0, 1)
 
-        return img, mask
+        return img, egg, pan
 
     def _normalize_img(self, img):
 

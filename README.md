@@ -9,3 +9,7 @@ Segmentation model for eggs and pans
 - Cross validation training
 - Augmented testing (flips, multi-scale)
 - Better backbone
+- Add config file
+- Filter out very small objects
+- Weight warm up
+- Cosine learning rate change
